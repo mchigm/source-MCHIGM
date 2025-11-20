@@ -84,6 +84,11 @@ pip install -r requirements.txt
 ### Running Python Service
 
 ```bash
+# For development (with debug mode)
+export FLASK_DEBUG=true
+python app.py
+
+# For production (without debug mode)
 python app.py
 ```
 

@@ -10,13 +10,15 @@ Main entry point for Python-based services including:
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app)
 
-# Configuration
-app.config['DEBUG'] = True
+# Configuration - read from environment
+DEBUG_MODE = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+app.config['DEBUG'] = DEBUG_MODE
 app.config['JSON_AS_ASCII'] = False
 
 
@@ -93,4 +95,5 @@ def internal_error(error):
 if __name__ == '__main__':
     print('Starting MCHIGM Python Service...')
     print('Server running on http://127.0.0.1:8001')
-    app.run(host='127.0.0.1', port=8001, debug=True)
+    # Only enable debug mode if explicitly set in environment
+    app.run(host='127.0.0.1', port=8001, debug=DEBUG_MODE)
