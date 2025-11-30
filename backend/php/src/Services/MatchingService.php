@@ -86,18 +86,29 @@ class MatchingService
     }
 
     /**
-     * Calculate location match score (simplified)
+     * Calculate location match score
+     * 
+     * NOTE: This is a placeholder implementation for demonstration purposes.
+     * In a production environment, this would be replaced with:
+     * - Geographic coordinate-based distance calculation
+     * - City/region matching
+     * - User preference-based location filtering
+     * 
+     * @param Demand $demand The demand to match
+     * @param Resource $resource The resource to check
+     * @return float Score between 0 and 1
      */
     private function calculateLocationScore(Demand $demand, Resource $resource): float
     {
         $location = $resource->getLocation();
         
-        // Online resources always match
-        if (stripos($location, '线上') !== false) {
+        // Online resources always match (no location constraint)
+        if (stripos($location, '线上') !== false || stripos($location, 'online') !== false) {
             return 1.0;
         }
 
-        // Simple check - would be more sophisticated in real implementation
+        // Placeholder: return neutral score for demonstration
+        // Real implementation would compare demand location with resource location
         return 0.5;
     }
 

@@ -49,6 +49,17 @@ class ApiClient {
 
         try {
             const response = await fetch(url, config);
+            
+            // Check for HTTP error status codes
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const error = new Error(
+                    errorData.message || `HTTP Error: ${response.status} ${response.statusText}`
+                );
+                console.error('API request failed:', error);
+                throw error;
+            }
+            
             const data = await response.json();
             return data as ApiResponse<T>;
         } catch (error) {

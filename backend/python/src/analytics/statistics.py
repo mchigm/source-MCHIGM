@@ -51,14 +51,19 @@ class StatisticsService:
         completion_rate = (completed / total * 100) if total > 0 else 0.0
         
         # Average completion time (days)
+        # Note: Uses 'completed_at' if available, otherwise falls back to 'updated_at'
+        # In production, demands should have a dedicated 'completed_at' timestamp
         completion_days = []
         for demand in demands:
             if demand.get('status') == 'completed':
                 created = self._parse_date(demand.get('created_at'))
-                updated = self._parse_date(demand.get('updated_at'))
-                if created and updated:
-                    days = (updated - created).days
-                    completion_days.append(days)
+                # Prefer completed_at over updated_at for accurate timing
+                completed_at = self._parse_date(
+                    demand.get('completed_at') or demand.get('updated_at')
+                )
+                if created and completed_at:
+                    days = (completed_at - created).days
+                    completion_days.append(max(0, days))  # Ensure non-negative
         
         avg_completion_days = (
             sum(completion_days) / len(completion_days) 
